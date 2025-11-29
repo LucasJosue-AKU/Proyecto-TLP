@@ -20,4 +20,5 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('api.urls'))
+    # incluyo el api/project para editar la base de datos(hay estoy ocupando autenticacion por tokens por si acaso y  el admin tiene permiso de entrar a todo)
 ]

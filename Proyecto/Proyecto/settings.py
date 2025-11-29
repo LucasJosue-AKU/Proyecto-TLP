@@ -39,8 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'core',
     'api',
-    'rest_framework'
-
+    'rest_framework',
+    'rest_framework.authtoken',
+    #añadirlo para que funcione la autenticacion por tokens
 ]
 
 MIDDLEWARE = [

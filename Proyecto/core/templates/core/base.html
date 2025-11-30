@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,8 +7,28 @@
     <title>EcoLibrary</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
-<body>
-    <h1>Base</h1>
+<body class="bg-slate-950">
+    <header>
+        <nav class="h-[10vh] bg-gradient-to-br from-lime-100  via-lime-200 to-lime-300 flex flex-row items-center justify-between px-[5vw]">
+            <div>
+                <img src="{% static 'core/logo.png' %}" alt="" class="h-[8vh] object-cover hover:cursor-pointer">
+            </div>
+            <div>
+                <input type="search" placeholder="Buscar libro" class="h-[5vh] w-[25vw] bg-white text-black rounded-l-md">
+                <button class="h-[5vh] w-[5vw] bg-gradient-to-r from-lime-400 via-lime-500 to-lime-500  text-white rounded-r-md hover:scale-105 transition-transform hover:cursor-pointer">
+                    Buscar
+                </button>
+            </div>
+            <ul class="flex flex-row items-center justify-end gap-15 text-xl text-lime-800">
+                <li class="hover:scale-105 transition-transform">
+                    <a href="">Catalogo</a>
+                </li>
+                <li class="hover:scale-105 transition-transform">
+                    <a href="">Iniciar sesion</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
     {% block content %}
     {% endblock %}
 </body>

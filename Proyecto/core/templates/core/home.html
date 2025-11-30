@@ -1,10 +1,15 @@
 {% extends 'core/base.html' %}
 
 {% block content %}
-<main class="min-h-[90vh] px-[12vw]">
-    <section class="grid grid-rows-12 grid-cols-12 items-center gap-5 mt-[4vh]">
-        <article class="bg-white row-span-4 col-span-3 h-[50vh] hover:scale-95 transition-transform duration-300 rounded-sm bg-[url('https://marketplace.canva.com/EAFQ6QRNlEU/1/0/1003w/canva-car%C3%A1tula-de-libros-de-ciencia-ficci%C3%B3n-verde-y-rosa-D45iCPGnKec.jpg')] bg-contain">
-        </article>
+<main class="min-h-[90vh] py-[5vh] px-[20vh]">
+    <section class="grid grid-cols-12 gap-10">
+        {% include 'core/tarjeta_libro.html' %}
+        
+
+
+
     </section>
 </main>
+    
+    
 {% endblock %}

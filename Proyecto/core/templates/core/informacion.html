@@ -21,8 +21,8 @@
 
             <!-- Usuario anonimo redirige a template registro, de lo contrario se agrega a los libros favoritos del usuario -->
             {% if not user.is_authenticated %}
-                <a href="{% url 'Registro' %}" class="mb-[2vh] flex flex-row justify-end">
-                    <img src="{% static 'core/bookmark-sharp.svg' %}" alt="" class="h-[8vh] invert hover:scale-110 hover:cursor-pointer duration-300">
+                <a href="{% url 'Registro'%}?siguiente={{request.path}}&id={{libro.id}}" class="mb-[2vh] flex flex-row justify-end">
+                    <img src="{% static 'core/bookmark-outline.svg' %}" alt="" class="h-[8vh] invert hover:scale-110 hover:cursor-pointer duration-300">
                 </a>
             {% else %}
                 <a href="" class="mb-[2vh] flex flex-row justify-end">

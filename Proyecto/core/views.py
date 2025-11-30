@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
+from .models import Perfil
+from api.models import Libro
 from django.contrib.auth import authenticate, login, logout
 from .optimizaciones import obtener_portada, obtener_descripcion
 import requests
@@ -38,9 +40,11 @@ def informacion(request, id):
     datos_api = conexion_api.json()
     
     titulo = datos_api['Titulo']
+    id = datos_api['id']
     autor = datos_api['Autor']
 
     contexto_libro = {
+        "id"    : id,
         "titulo" : titulo,
         "portada": obtener_portada(titulo),
         "descripcion" : obtener_descripcion(titulo),
@@ -77,9 +81,21 @@ def registro(request):
             nuevo_usuario = User.objects.create_user(username=nombre_usuario, email=correo_electronico, password=contraseña)
             nuevo_usuario.save()
 
+            # crear perfil
+            perfil = Perfil.objects.create(usuario=nuevo_usuario)
+
             usuario = authenticate(username=nombre_usuario, password=contraseña)
             if usuario is not None:
+
                 login(request, usuario)
+    
+                if request.GET.get('id'):
+                    id = int(request.GET.get('id'))
+                    libro = Libro.objects.get(id=id)
+                    perfil.favoritos.add(libro)
+
+                url_anterior = request.GET.get('siguiente', 'Catalogo')
+                return redirect(url_anterior)
         
         else: 
             return render(request, 'core/registro.html', {
@@ -91,3 +107,5 @@ def registro(request):
 
 def inicio_sesion(request):
     return render(request, 'core/inicio_sesion.html')
+
+    

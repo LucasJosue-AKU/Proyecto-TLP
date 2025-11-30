@@ -1,4 +1,6 @@
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render, redirect
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
 from .optimizaciones import obtener_portada, obtener_descripcion
 import requests
 
@@ -51,4 +53,41 @@ def informacion(request, id):
 
 
 def registro(request):
+
+    if request.method == "POST":
+
+        estados_campos = {
+            'nombre_usuario' : True,
+            'correo_electronico' : True,
+        }
+
+        nombre_usuario = request.POST['nombre']
+        correo_electronico = request.POST['correo']
+
+        if User.objects.filter(username=nombre_usuario).exists():
+            estados_campos['nombre_usuario'] = False
+
+        if User.objects.filter(email=correo_electronico).exists():
+            estados_campos['correo_electronico'] = False
+
+        if estados_campos['nombre_usuario'] and estados_campos['correo_electronico']:
+
+            contraseña = request.POST['contraseña']
+
+            nuevo_usuario = User.objects.create_user(username=nombre_usuario, email=correo_electronico, password=contraseña)
+            nuevo_usuario.save()
+
+            usuario = authenticate(username=nombre_usuario, password=contraseña)
+            if usuario is not None:
+                login(request, usuario)
+        
+        else: 
+            return render(request, 'core/registro.html', {
+                'estado_campos' : estados_campos,
+            })
+        
     return render(request, 'core/registro.html')
+ 
+
+def inicio_sesion(request):
+    return render(request, 'core/inicio_sesion.html')

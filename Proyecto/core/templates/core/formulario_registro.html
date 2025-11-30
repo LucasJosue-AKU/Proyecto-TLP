@@ -1,0 +1,40 @@
+<form method="POST" class="h-[75vh] flex flex-col py-[7vh] px-[8vh] justify-between">
+    {% csrf_token %}
+    
+    <div class="flex flex-col gap-7">
+        <!-- Label + input field-->
+        <!-- Nombre de usuario -->
+        <div class="flex flex-col gap-2 text-lime-950">
+            <label for="nombre-usuario">Nombre de usuario:</label>
+            {% if estado_campos.nombre_usuario is False %}
+                <input name="nombre" type="text" placeholder="Ingrese nombre de usuario..." class="h-[5vh] bg-white px-[1vw] shadow-sm shadow-red-400">
+            {% else %}
+                <input name="nombre" type="text" placeholder="Ingrese nombre de usuario..." class="h-[5vh] bg-white px-[1vw]">
+            {% endif %}
+            
+        </div>
+        <!-- Correo -->
+        <div class="flex flex-col gap-2 text-lime-950">
+            <label for="correo-usuario">Correo electronico::</label>
+            {% if estado_campos.correo_electronico is False %}
+            <input name="correo" type="text" placeholder="Ingrese correo electronico..." class="h-[5vh] bg-white px-[1vw] shadow-sm shadow-red-400">
+            {% else %}
+            <input name="correo" type="text" placeholder="Ingrese correo electronico..." class="h-[5vh] bg-white px-[1vw]">
+            {% endif %}
+        </div>
+        <!-- Contraseña -->
+        <div class="flex flex-col gap-2 text-lime-950">
+            <label for="contraseña-usuario">Contraseña:</label>
+            <input name="contraseña" type="password" placeholder="Ingrese contraseña..." class="h-[5vh] bg-white px-[1vw]">
+        </div>
+    </div>
+    <div class="flex flex-col gap-8">
+        <hr>
+        <div class="flex flex-row justify-center">
+            <button class="h-[8vh] w-[15vw] bg-gradient-to-r shadow-sm shadow-lime-900 from-lime-400 via-lime-500 to-lime-500 hover:scale-105 transition-transform hover:cursor-pointer">
+                Registrarse
+            </button>
+        </div>
+    </div>        
+    
+</form>

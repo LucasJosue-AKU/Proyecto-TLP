@@ -1,4 +1,5 @@
 from django.shortcuts import render, HttpResponse
+from .optimizaciones import obtener_portada, obtener_descripcion
 import requests
 
 def home(request):
@@ -14,20 +15,10 @@ def catalogo(request):
     
     # Se obtienen las portadas de OpenLibrary
     for libro in datos_api:
-        titulo = libro["Titulo"]
-        id = libro["id"]
-        print(id)
-        url_openLibrary = "https://openlibrary.org/search.json?title={}".format(titulo)
-        conexion_openLibrary = requests.get(url_openLibrary)
-        datos_openLibrary = conexion_openLibrary.json()
-        portada = ""
 
-        for doc in datos_openLibrary["docs"]:
-            if "cover_edition_key" in doc:
-                portada = "https://covers.openlibrary.org/b/olid/{}-L.jpg".format(
-                    doc["cover_edition_key"]
-                )
-                break
+        titulo = libro['Titulo']
+        id = libro['id']
+        portada = obtener_portada(titulo)
 
         contexto_libros.append({
             "id" : id,
@@ -44,20 +35,12 @@ def informacion(request, id):
     conexion_api = requests.get(url_api)
     datos_api = conexion_api.json()
     
-    titulo = datos_api["Titulo"]
-    url_google_api = "https://www.googleapis.com/books/v1/volumes?q=intitle:{}".format(titulo)
-    conexion_google_api = requests.get(url_google_api)
-    datos_libro = conexion_google_api.json()
-    descripcion = ""
-
-    for item in datos_libro["items"][:10]:
-        if "volumeInfo" in item and "description" in item["volumeInfo"]:
-            descripcion = item["volumeInfo"]["description"]
-            break
+    titulo = datos_api['Titulo']
 
     contexto_libro = {
         "titulo" : titulo,
-        "descripcion" : descripcion,
+        "portada": obtener_portada(titulo),
+        "descripcion" : obtener_descripcion(titulo),
     }
 
     return render(request, 'core/informacion.html', {

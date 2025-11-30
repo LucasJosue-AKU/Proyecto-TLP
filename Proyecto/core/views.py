@@ -3,6 +3,10 @@ import requests
 
 def home(request):
 
+    return render(request, 'core/home.html')
+
+def catalogo(request):
+
     url_api = "http://127.0.0.1:8000/api/api/projects/"
     conexion_api = requests.get(url_api)
     datos_api = conexion_api.json()
@@ -28,6 +32,6 @@ def home(request):
             "portada" : portada
         })
         
-    return render(request, 'core/home.html', {
+    return render(request, 'core/catalogo.html', {
         'libros' : contexto_libros
     })

@@ -1,13 +1,4 @@
 {% extends 'core/base.html' %}
 
 {% block content %}
-<main class="min-h-[90vh] py-[5vh] px-[20vh]">
-    <section class="grid grid-cols-12 gap-10">
-        {% for libro in libros %}
-            {% include 'core/tarjeta_libro.html' %}
-        {% endfor %}
-    </section>
-</main>
-    
-    
 {% endblock %}

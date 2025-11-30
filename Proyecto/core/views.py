@@ -36,13 +36,19 @@ def informacion(request, id):
     datos_api = conexion_api.json()
     
     titulo = datos_api['Titulo']
+    autor = datos_api['Autor']
 
     contexto_libro = {
         "titulo" : titulo,
         "portada": obtener_portada(titulo),
         "descripcion" : obtener_descripcion(titulo),
+        'autor' : autor,
     }
 
     return render(request, 'core/informacion.html', {
         'libro' : contexto_libro
     })
+
+
+def registro(request):
+    return render(request, 'core/registro.html')

@@ -1,5 +1,36 @@
 {% extends 'core/base.html' %}
+{% load static %}
 
 {% block content %}
-{{libro}}
+<main class="h-[90vh] w-full py-5 px-[10vw]">
+    <section class="h-full w-full bg-black flex flex-row gap-15">
+        <div class="h-full w-[30vw]">
+            <img src="{{libro.portada}}" alt="" class="h-full w-full">
+        </div>
+        <div class="w-[40vw] flex flex-col text-white py-[2vh] justify-between">
+            <div class="flex flex-col gap-5">
+                <div>
+                    <h1 class="text-3xl font-extralight">{{libro.titulo}}</h1>
+                    <h2 class="text-xl font-semibold">De {{libro.autor}}</h2>
+                </div>
+                <hr>
+                <div class="w-ful">
+                    <p class="text-xs text-justify">{{libro.descripcion}}</p>
+                </div>
+            </div>
+
+            <!-- Usuario anonimo redirige a template registro, de lo contrario se agrega a los libros favoritos del usuario -->
+            {% if not user.is_authenticated %}
+                <a href="{% url 'Registro' %}" class="mb-[2vh] flex flex-row justify-end">
+                    <img src="{% static 'core/bookmark-sharp.svg' %}" alt="" class="h-[8vh] invert hover:scale-110 hover:cursor-pointer duration-300">
+                </a>
+            {% else %}
+                <a href="" class="mb-[2vh] flex flex-row justify-end">
+                    <img src="{% static 'core/bookmark-sharp.svg' %}" alt="" class="h-[8vh] invert hover:scale-110 hover:cursor-pointer duration-300">
+                </a>
+            {% endif %}
+            
+        </div>
+    </section>
+</main>
 {% endblock %}

@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from .models import Perfil
 from api.models import Libro
 from django.contrib.auth import authenticate, login, logout
-from .optimizaciones import obtener_portada, obtener_descripcion
+from .recursos import obtener_portada, obtener_descripcion
 import requests
 
 def home(request):
@@ -155,4 +155,33 @@ def marcar_libro(request, id):
 def quitar_marcado(request, id):
     libro = Libro.objects.get(id=int(id))
     request.user.perfil.favoritos.remove(libro)
+
+    if request.GET.get('siguiente'):
+        siguiente = request.GET.get('siguiente')
+        return redirect(siguiente)
+    
     return redirect('Informacion', id)
+
+def favoritos(request):
+
+    contexto_libros = []
+
+    libros = request.user.perfil.favoritos.all()
+
+    for libro in libros:
+
+        id = libro.id
+        titulo = libro.Titulo
+        autor = libro.Autor
+        portada = obtener_portada(titulo)
+
+        contexto_libros.append({
+            'id' : id,
+            'titulo' : titulo,
+            'autor' : autor,
+            'portada' : portada
+        })
+        
+    return render(request, 'core/favoritos.html', {
+        'libros' : contexto_libros,
+    })

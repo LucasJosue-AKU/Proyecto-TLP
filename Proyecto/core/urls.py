@@ -10,4 +10,5 @@ urlpatterns = [
     path('cerrar-sesion/', views.cerrar_sesion, name="Cerrar-sesion"),
     path('marcar-libro/<int:id>', views.marcar_libro, name="Marcar-libro"),
     path('quitar-marcado/<int:id>', views.quitar_marcado, name="Quitar-marcado"),
+    path('favoritos/', views.favoritos, name="Favoritos")
 ]

@@ -24,6 +24,11 @@
                     <a href="{% url 'Catalogo' %}">Catalogo</a>
                 </li>
                 {% if request.user.is_authenticated %}
+                    {% if request.user.is_superuser is False %}
+                        <li class="hover:scale-105 transition-transform">
+                            <a href="{% url 'Favoritos' %}">Favoritos</a>
+                        </li>
+                    {% endif %}
                     <li class="hover:scale-105 transition-transform">
                         <a href="{% url 'Cerrar-sesion' %}">Cerrar sesión</a>
                     </li>

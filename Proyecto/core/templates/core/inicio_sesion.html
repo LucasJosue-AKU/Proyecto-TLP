@@ -1,7 +1,7 @@
 {% extends 'core/base.html' %}
 {% block content %}
 <main class="h-[90vh] w-full py-5 px-[32vw]">
-    <section class="h-fullh-[10vh] bg-gradient-to-br from-lime-100  via-lime-200 to-lime-300 flex flex-col">
+    <section class="h-fullh-[10vh] bg-gradient-to-br from-lime-100  via-lime-200 to-lime-300 flex flex-col shadow-sm shadow-lime-100">
         <div class="h-[10vh] flex flex-row justify-center gap-1 items-center">
             {% if request.GET.siguiente %}
                 <a href="{% url 'Registro' %}?siguiente={{request.GET.siguiente}}&id={{request.GET.id}}" class="hover:scale-105 transition-transform ">

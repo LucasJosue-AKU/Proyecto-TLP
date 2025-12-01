@@ -23,9 +23,15 @@
                 <li class="hover:scale-105 transition-transform">
                     <a href="{% url 'Catalogo' %}">Catalogo</a>
                 </li>
-                <li class="hover:scale-105 transition-transform">
-                    <a href="">Iniciar sesion</a>
-                </li>
+                {% if request.user.is_authenticated %}
+                    <li class="hover:scale-105 transition-transform">
+                        <a href="{% url 'Cerrar-sesion' %}">Cerrar sesión</a>
+                    </li>
+                {% else %}
+                    <li class="hover:scale-105 transition-transform">
+                        <a href="{% url 'Inicio-sesion' %}">Iniciar sesion</a>
+                    </li>
+                {% endif %}
             </ul>
         </nav>
     </header>

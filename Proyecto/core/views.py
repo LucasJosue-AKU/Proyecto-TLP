@@ -49,7 +49,12 @@ def informacion(request, id):
         "portada": obtener_portada(titulo),
         "descripcion" : obtener_descripcion(titulo),
         'autor' : autor,
+        'libro_marcado' : False
     }
+
+    if request.user.is_superuser is False and request.user.is_authenticated:
+        contexto_libro['libro_marcado'] = request.user.perfil.favoritos.filter(id=id).exists()
+    
 
     return render(request, 'core/informacion.html', {
         'libro' : contexto_libro
@@ -106,6 +111,48 @@ def registro(request):
  
 
 def inicio_sesion(request):
-    return render(request, 'core/inicio_sesion.html')
 
-    
+    if request.method == "POST":
+
+        nombre_usuario = request.POST['nombre']
+        contraseña = request.POST['contraseña']
+
+        usuario = authenticate(username=nombre_usuario, password=contraseña)
+
+        if usuario is not None:        
+            login(request, usuario)
+
+            url = "Home"
+
+            # si inicio sesion al intentar marcar un libro, se marca
+            if request.GET.get('id'):
+
+                id = int(request.GET.get('id'))
+
+                if usuario.perfil.favoritos.filter(id=id).exists():
+                    libro = Libro.objects.get(id=id)
+                    usuario.perfil.favoritos.add(libro)
+
+                url = request.GET.get('siguiente')
+
+            return redirect(url)
+        else:
+            return render(request, 'core/inicio_sesion.html', {
+                'error' : True,
+            })
+    else:
+        return render(request, 'core/inicio_sesion.html')
+
+def cerrar_sesion(request):
+    logout(request)
+    return redirect('Home')
+
+def marcar_libro(request, id):
+    libro = Libro.objects.get(id=int(id))
+    request.user.perfil.favoritos.add(libro)
+    return redirect('Informacion', id)
+
+def quitar_marcado(request, id):
+    libro = Libro.objects.get(id=int(id))
+    request.user.perfil.favoritos.remove(libro)
+    return redirect('Informacion', id)

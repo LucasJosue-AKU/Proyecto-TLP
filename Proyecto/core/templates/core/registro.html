@@ -3,16 +3,29 @@
 <main class="h-[90vh] w-full py-5 px-[32vw]">
     <section class="h-fullh-[10vh] bg-gradient-to-br from-lime-100  via-lime-200 to-lime-300 flex flex-col">
         <div class="h-[10vh] flex flex-row justify-center gap-1 items-center">
-            <a href="{% url 'Registro' %}" class="hover:scale-105 transition-transform ">
-                <button class="h-[5vh] w-[10vw] bg-lime-500 text-lime-950 contrast-50 hover:cursor-pointer  ">
-                    Registrar
-                </button>
-            </a>
-            <a href="{% url 'Inicio-sesion' %}" class="hover:scale-105 transition-transform ">
-                <button class="h-[5vh] w-[10vw] bg-lime-500  text-lime-950 hover:cursor-pointer">
-                    Inicio sesión
-                </button>
-            </a>
+            {% if request.GET.siguiente %}
+                <a href="{% url 'Registro' %}?siguiente={{request.GET.siguiente}}&id={{request.GET.id}}" class="hover:scale-105 transition-transform ">
+                    <button class="h-[5vh] w-[10vw] bg-lime-500 text-lime-950 contrast-50 hover:cursor-pointer  ">
+                        Registrar
+                    </button>
+                </a>
+                <a href="{% url 'Inicio-sesion' %}?siguiente={{request.GET.siguiente}}&id={{request.GET.id}}" class="hover:scale-105 transition-transform ">
+                    <button class="h-[5vh] w-[10vw] bg-lime-500  text-lime-950 hover:cursor-pointer">
+                        Inicio sesión
+                    </button>
+                </a>
+            {% else %}
+                <a href="{% url 'Registro' %}" class="hover:scale-105 transition-transform ">
+                    <button class="h-[5vh] w-[10vw] bg-lime-500 text-lime-950 contrast-50 hover:cursor-pointer  ">
+                        Registrar
+                    </button>
+                </a>
+                <a href="{% url 'Inicio-sesion' %}" class="hover:scale-105 transition-transform ">
+                        <button class="h-[5vh] w-[10vw] bg-lime-500  text-lime-950 hover:cursor-pointer">
+                            Inicio sesión
+                        </button>
+                </a>
+            {% endif %}
         </div>
         <hr>
         {% include 'core/formulario_registro.html' %}

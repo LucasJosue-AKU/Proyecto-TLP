@@ -1,18 +1,29 @@
 <form method="POST" class="h-[75vh] flex flex-col py-[7vh] px-[8vh] justify-between">
-{% csrf_token %}
-
+    {% csrf_token %}
     <div class="flex flex-col gap-7">
         <!-- Label + input field-->
         <!-- Nombre de usuario -->
-        <div class="flex flex-col gap-2 text-lime-950">
-            <label for="nombre-usuario">Nombre de usuario:</label>
-            <input name="nombre" type="text" placeholder="Ingrese nombre de usuario..." class="h-[5vh] bg-white px-[1vw]">
-        </div>
-        <!-- Contraseña -->
-        <div class="flex flex-col gap-2 text-lime-950">
-            <label for="contraseña-usuario">Contraseña:</label>
-            <input name="contraseña" type="password" placeholder="Ingrese contraseña..." class="h-[5vh] bg-white px-[1vw]">
-        </div>
+        {% if error is True %}
+            <div class="flex flex-col gap-2 text-lime-950 ">
+                <label for="nombre-usuario">Nombre de usuario:</label>
+                <input name="nombre" type="text" placeholder="Ingrese nombre de usuario..." class="h-[5vh] bg-white px-[1vw] shadow-sm shadow-red-400">
+            </div>
+            <!-- Contraseña -->
+            <div class="flex flex-col gap-2 text-lime-950">
+                <label for="contraseña-usuario">Contraseña:</label>
+                <input name="contraseña" type="password" placeholder="Ingrese contraseña..." class="h-[5vh] bg-white px-[1vw] shadow-sm shadow-red-400">
+            </div>
+        {% else %}
+            <div class="flex flex-col gap-2 text-lime-950 ">
+                <label for="nombre-usuario">Nombre de usuario:</label>
+                <input name="nombre" type="text" placeholder="Ingrese nombre de usuario..." class="h-[5vh] bg-white px-[1vw]">
+            </div>
+            <!-- Contraseña -->
+            <div class="flex flex-col gap-2 text-lime-950">
+                <label for="contraseña-usuario">Contraseña:</label>
+                <input name="contraseña" type="password" placeholder="Ingrese contraseña..." class="h-[5vh] bg-white px-[1vw]">
+            </div>
+        {% endif %}
     </div>
 
     <div class="flex flex-col gap-8">

@@ -3,12 +3,34 @@ from django.contrib.auth.models import User
 from .models import Perfil
 from api.models import Libro
 from django.contrib.auth import authenticate, login, logout
-from .recursos import obtener_portada, obtener_descripcion
+from .recursos import obtener_portada, obtener_datos_google_books
 import requests
 
 def home(request):
 
+    if request.method == "POST":
+
+        titulo_buscado = request.POST['titulo']
+
+        url_api = "http://127.0.0.1:8000/api/api/projects/"
+        conexion_api = requests.get(url_api)
+        datos_api = conexion_api.json()
+
+        for libro in datos_api:
+            id = libro['id']
+            titulo = libro['Titulo']
+
+            print(titulo_buscado.lower())
+            print(titulo.lower())
+            if titulo_buscado.lower() == titulo.lower():
+                return redirect('Informacion', id)
+            
+        return render(request, 'core/home.html', {
+            'no_encontrado' : True,
+        })
+
     return render(request, 'core/home.html')
+    
 
 def catalogo(request):
 
@@ -43,11 +65,14 @@ def informacion(request, id):
     id = datos_api['id']
     autor = datos_api['Autor']
 
+    datos_google_books = obtener_datos_google_books(titulo)
+
     contexto_libro = {
         "id"    : id,
-        "titulo" : titulo,
+        'titulo' : titulo,
         "portada": obtener_portada(titulo),
-        "descripcion" : obtener_descripcion(titulo),
+        'descripcion' : datos_google_books['descripcion'],
+        'puntuacion' : datos_google_books['puntuacion'],
         'autor' : autor,
         'libro_marcado' : False
     }
@@ -124,23 +149,25 @@ def inicio_sesion(request):
 
             url = "Home"
 
-            # si inicio sesion al intentar marcar un libro, se marca
+            # si se inicia sesion al intentar marcar un libro este se marca
             if request.GET.get('id'):
 
                 id = int(request.GET.get('id'))
 
-                if usuario.perfil.favoritos.filter(id=id).exists():
+                if usuario.perfil.favoritos.filter(id=id).exists() == False:
                     libro = Libro.objects.get(id=id)
                     usuario.perfil.favoritos.add(libro)
 
                 url = request.GET.get('siguiente')
 
             return redirect(url)
+        
         else:
             return render(request, 'core/inicio_sesion.html', {
                 'error' : True,
             })
     else:
+
         return render(request, 'core/inicio_sesion.html')
 
 def cerrar_sesion(request):

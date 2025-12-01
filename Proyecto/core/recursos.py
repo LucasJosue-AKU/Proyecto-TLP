@@ -1,6 +1,6 @@
 from django.core.cache import cache
 import requests
-
+        
 def obtener_portada(titulo):
 
     # Agregar al cache y si ya esta, se devuelve de ahi
@@ -26,22 +26,37 @@ def obtener_portada(titulo):
     cache.set(llave, portada, timeout=60*60)
     return portada
 
-def obtener_descripcion(titulo):
+def obtener_datos_google_books(titulo):
 
-    llave = "descripcion_{}".format(titulo)
-    descripcion = cache.get(llave)
-    if descripcion:
-        return descripcion
+    datos = {
+        'descripcion' : "",
+        'puntuacion' : "",
+    }
+
+    llave_descripcion = "descripcion_{}".format(titulo)
+    llave_puntuacion = "puntuacion_{}".format(titulo)
+
+    datos['descripcion'] = cache.get(llave_descripcion)
+    datos['puntuacion'] = cache.get(llave_puntuacion)
+    
+    if datos['descripcion'] and datos['puntuacion']:
+        return datos
     
     url_google_api = "https://www.googleapis.com/books/v1/volumes?q=intitle:{}".format(titulo)
     conexion_google_api = requests.get(url_google_api)
     datos_libro = conexion_google_api.json()
-    descripcion = ""
+    datos['descripcion'] = ""
+    datos["puntuacion"] = ""
 
     for item in datos_libro["items"][:10]:
-        if "volumeInfo" in item and "description" in item["volumeInfo"]:
-            descripcion = item["volumeInfo"]["description"]
-            break
-
-    cache.set(llave, descripcion, 60*60)
-    return descripcion
+        if "volumeInfo" in item:
+            if datos["descripcion"] == "":
+                datos["descripcion"] = item["volumeInfo"]["description"]
+            elif datos["puntuacion"] == "":
+                datos["puntuacion"] = item["volumeInfo"]["averageRating"]
+            else:
+                break
+            
+    cache.set(llave_descripcion, datos["descripcion"], 60*60)
+    cache.set(llave_puntuacion, datos["puntuacion"], 60*60)
+    return datos

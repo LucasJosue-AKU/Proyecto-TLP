@@ -3,40 +3,42 @@
 
 {% block content %}
 <main class="h-[90vh] w-full py-5 px-[10vw]">
-    <section class="h-full w-full bg-black flex flex-row gap-15">
+    <section class="h-full w-full bg-black flex flex-row shadow-sm shadow-slate-950">
         <div class="h-full w-[30vw]">
             <img src="{{libro.portada}}" alt="" class="h-full w-full">
         </div>
-        <div class="w-[40vw] flex flex-col text-white py-[2vh] justify-between">
+        <div class="w-[40vw] flex flex-col text-white py-[2vh] justify-between mx-auto">
             <div class="flex flex-col gap-5">
-                <div>
-                    <h1 class="text-3xl font-extralight">{{libro.titulo}}</h1>
-                    <h2 class="text-xl font-semibold">De {{libro.autor}}</h2>
-                </div>
+                <div class="flex flex-row justify-between">
+                    <div class="flex flex-col">
+                        <h1 class="text-3xl font-extralight">{{libro.titulo}}</h1>
+                        <h2 class="text-xl font-semibold">De {{libro.autor}}</h2>
+                        <h2 class="font-thin">{{libro.puntuacion}} / 5.0</h2>
+                    </div>
+                        <!-- Usuario anonimo redirige a template registro, de lo contrario se agrega a los libros favoritos del usuario -->
+                        {% if not user.is_authenticated %}
+                            <a href="{% url 'Registro'%}?siguiente={{request.path}}&id={{libro.id}}">
+                                <img src="{% static 'core/bookmark-sin-marcar.svg' %}" alt="" class="h-[8vh] invert hover:scale-110 hover:cursor-pointer duration-300 mt-[1vh]">
+                            </a>
+                        {% else %}
+                            {% if request.user.is_staff is False %}
+                                {% if libro.libro_marcado %}
+                                    <a href="{% url 'Quitar-marcado' libro.id %}">
+                                        <img src="{% static 'core/bookmark-marcado.svg' %}" alt="" class="h-[8vh] invert hover:scale-110 hover:cursor-pointer duration-300 mt-[1vh]">
+                                    </a>
+                                {% else %}
+                                    <a href="{% url 'Marcar-libro' libro.id %}" >
+                                        <img src="{% static 'core/bookmark-sin-marcar.svg' %}" alt="" class="h-[8vh] invert hover:scale-110 hover:cursor-pointer duration-300 mt-[1vh]">
+                                    </a>
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
+                    </div>
                 <hr>
-                <div class="w-ful">
-                    <p class="text-xs text-justify">{{libro.descripcion}}</p>
+                <div class="w-full">
+                    <p class=" text-justify">{{libro.descripcion}}</p>
                 </div>
             </div>
-
-            <!-- Usuario anonimo redirige a template registro, de lo contrario se agrega a los libros favoritos del usuario -->
-            {% if not user.is_authenticated %}
-                <a href="{% url 'Registro'%}?siguiente={{request.path}}&id={{libro.id}}" class="mb-[2vh] flex flex-row justify-end">
-                    <img src="{% static 'core/bookmark-sin-marcar.svg' %}" alt="" class="h-[8vh] invert hover:scale-110 hover:cursor-pointer duration-300">
-                </a>
-            {% else %}
-                {% if request.user.is_superuser is not True %}
-                    {% if libro.libro_marcado %}
-                        <a href="{% url 'Quitar-marcado' libro.id %}" class="mb-[2vh] flex flex-row justify-end">
-                            <img src="{% static 'core/bookmark-marcado.svg' %}" alt="" class="h-[8vh] invert hover:scale-110 hover:cursor-pointer duration-300">
-                        </a>
-                    {% else %}
-                        <a href="{% url 'Marcar-libro' libro.id %}" class="mb-[2vh] flex flex-row justify-end">
-                            <img src="{% static 'core/bookmark-sin-marcar.svg' %}" alt="" class="h-[8vh] invert hover:scale-110 hover:cursor-pointer duration-300">
-                        </a>
-                    {% endif %}
-                {% endif %}
-            {% endif %}
         </div>
     </section>
 </main>

@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from .models import Perfil
 from api.models import Libro
 from django.contrib.auth import authenticate, login, logout
-from .recursos import obtener_portada, obtener_datos_google_books
+from .recursos import obtener_portada, obtener_descripcion
 import requests
 
 def home(request):
@@ -64,20 +64,21 @@ def informacion(request, id):
     titulo = datos_api['Titulo']
     id = datos_api['id']
     autor = datos_api['Autor']
-
-    datos_google_books = obtener_datos_google_books(titulo)
+    categoria = datos_api['Categoria']
+    año = datos_api['Año']
 
     contexto_libro = {
         "id"    : id,
         'titulo' : titulo,
         "portada": obtener_portada(titulo),
-        'descripcion' : datos_google_books['descripcion'],
-        'puntuacion' : datos_google_books['puntuacion'],
+        'descripcion' : obtener_descripcion(titulo),
+        'categoria' : categoria,
+        'año' : año,
         'autor' : autor,
         'libro_marcado' : False
     }
 
-    if request.user.is_superuser is False and request.user.is_authenticated:
+    if (request.user.is_authenticated and request.user.is_staff == False):
         contexto_libro['libro_marcado'] = request.user.perfil.favoritos.filter(id=id).exists()
     
 

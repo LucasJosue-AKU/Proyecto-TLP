@@ -26,37 +26,24 @@ def obtener_portada(titulo):
     cache.set(llave, portada, timeout=60*60)
     return portada
 
-def obtener_datos_google_books(titulo):
+def obtener_descripcion(titulo):
 
-    datos = {
-        'descripcion' : "",
-        'puntuacion' : "",
-    }
+    llave = "descripcion_{}".format(titulo)
+    descripcion = cache.get(llave)
 
-    llave_descripcion = "descripcion_{}".format(titulo)
-    llave_puntuacion = "puntuacion_{}".format(titulo)
-
-    datos['descripcion'] = cache.get(llave_descripcion)
-    datos['puntuacion'] = cache.get(llave_puntuacion)
-    
-    if datos['descripcion'] and datos['puntuacion']:
-        return datos
+    if descripcion:
+        return descripcion
     
     url_google_api = "https://www.googleapis.com/books/v1/volumes?q=intitle:{}".format(titulo)
     conexion_google_api = requests.get(url_google_api)
     datos_libro = conexion_google_api.json()
-    datos['descripcion'] = ""
-    datos["puntuacion"] = ""
+    descripcion = ""
 
     for item in datos_libro["items"][:10]:
-        if "volumeInfo" in item:
-            if datos["descripcion"] == "":
-                datos["descripcion"] = item["volumeInfo"]["description"]
-            elif datos["puntuacion"] == "":
-                datos["puntuacion"] = item["volumeInfo"]["averageRating"]
-            else:
-                break
+        if "volumeInfo" in item and "description" in item["volumeInfo"]:
+            descripcion = item["volumeInfo"]["description"]
+            break
             
-    cache.set(llave_descripcion, datos["descripcion"], 60*60)
-    cache.set(llave_puntuacion, datos["puntuacion"], 60*60)
-    return datos
+            
+    cache.set(llave, descripcion, 60*60)
+    return descripcion
